@@ -102,7 +102,7 @@ module.exports.getChangeLog = (payload, hideLinks, censorUsername) => {
                 : commit.message;
         changelog += !hideLinks
             ? `[\`${sha}\`](${commit.url}) ${message} by *@${username}*\nNewLine`
-            : `\`${sha}\` ${message}  by *@${username}*\nNewLine2`;
+            : `\`${sha}\` ${message}  by *@${username}*\nNewLine2`; 
     }
 
     return changelog;
