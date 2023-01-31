@@ -96,11 +96,12 @@ module.exports.getChangeLog = (payload, hideLinks, censorUsername) => {
         }
 
         let sha = commit.id.substring(0, 6);
+        changelog += `ChangeLogMessage`;
 
-        let message = commit.message.length > MAX_MESSAGE_LENGTH ? commit.message.substring(0, MAX_MESSAGE_LENGTH) + "..." : commit.message;
-        changelog += !hideLinks
-            ? `[\`${sha}\`](${commit.url}) ${message} by *@${username}*`
-            : `\`${sha}\` ${message}  by *@${username}*`; 
+        // let message = commit.message.length > MAX_MESSAGE_LENGTH ? commit.message.substring(0, MAX_MESSAGE_LENGTH) + "..." : commit.message;
+        // changelog += !hideLinks
+        //     ? `[\`${sha}\`](${commit.url}) ${message} by *@${username}*`
+        //     : `\`${sha}\` ${message}  by *@${username}*`; 
     }
 
     return changelog;
