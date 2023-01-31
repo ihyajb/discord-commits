@@ -41,7 +41,7 @@ module.exports.send = (
     ]
   }
 
-  let embed = new discord.MessageEmbed()
+  let embed = new discord.EmbedBuilder()
     .setColor(color)
     .setAuthor(AuthorEmbed[0], AuthorEmbed[1], AuthorEmbed[2])
     .setTitle(`📁 \`${repository}\`\n🌳 \`${branch}\``)
