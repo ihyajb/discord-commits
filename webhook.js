@@ -66,7 +66,7 @@ module.exports.send = (
             })
             .catch((error) => reject(error));
     });
-};
+}; 
 
 module.exports.getChangeLog = (payload, hideLinks, censorUsername) => {
     core.info("Constructing Changelog...");
