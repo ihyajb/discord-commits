@@ -33,14 +33,10 @@ module.exports.send = (
         `https://github.com/${latest.author.username}`,
       ]
 
-      core.info(AuthorEmbed[0]);
-      core.info(AuthorEmbed[1]);
-      core.info(AuthorEmbed[2]);
-
     let embed = new discord.EmbedBuilder()
         .setDescription(this.getChangeLog(payload, hideLinks, censorUsername))
         .setColor('Orange')
-        // .setAuthor(AuthorEmbed[0], AuthorEmbed[1], AuthorEmbed[2])
+        .setAuthor({name: AuthorEmbed[0], iconURL: AuthorEmbed[1], url: AuthorEmbed[2]})
         .setTitle(`📁 \`${repository}\`\n🌳 \`${branch}\``)
     // .setTimestamp(Date.parse(latest.timestamp));
 
