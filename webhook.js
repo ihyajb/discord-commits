@@ -34,8 +34,7 @@ module.exports.send = (
     //   ]
 
     let embed = new discord.EmbedBuilder()
-        .setDescription('Hello this is a test')
-    core.info(this.getChangeLog(payload, hideLinks, censorUsername))
+        .setDescription(this.getChangeLog(payload, hideLinks, censorUsername))
     // .setColor(color)
     // .setAuthor(AuthorEmbed[0], AuthorEmbed[1], AuthorEmbed[2])
     // .setTitle(`📁 \`${repository}\`\n🌳 \`${branch}\``)
