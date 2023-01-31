@@ -3,15 +3,13 @@ on: [push]
 jobs:
   disord_test_message:
     runs-on: ubuntu-latest
-    name: discord commits
+    name: Ajs Discord Commits
     steps:
-      - name: Checkout
+      - name: Checkout and Node
         uses: actions/checkout@v2
-
-      - name: Use Node 12.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: 12.x
+          node-version: 16
 
       - name: Install NPM Dependencies (prod)
         run: npm install --frozen-lockfile --production
