@@ -27,26 +27,19 @@ module.exports.send = (
   let latest = commits[0];
   const count = size == 1 ? "Commit" : " Commits";
 
-  let AuthorEmbed = [
-    `${latest.author.username} | ⚡ ${size} ${count}`,
-    `https://avatars.githubusercontent.com/${latest.author.username}`,
-    `https://github.com/${latest.author.username}`,
-  ]
-
-  if (censorUsername == 'true') { // This is shit code.... I know.
-    AuthorEmbed = [
-      `⚡ ${size} ${count}`,
-      '',
-      '',
-    ]
-  }
+//   let AuthorEmbed = [
+//     `${latest.author.username} | ⚡ ${size} ${count}`,
+//     `https://avatars.githubusercontent.com/${latest.author.username}`,
+//     `https://github.com/${latest.author.username}`,
+//   ]
 
   let embed = new discord.EmbedBuilder()
-    .setColor(color)
-    .setAuthor(AuthorEmbed[0], AuthorEmbed[1], AuthorEmbed[2])
-    .setTitle(`📁 \`${repository}\`\n🌳 \`${branch}\``)
-    .setDescription(this.getChangeLog(payload, hideLinks, censorUsername))
-    .setTimestamp(Date.parse(latest.timestamp));
+  .setDescription('Hello this is a test')
+    // .setColor(color)
+    // .setAuthor(AuthorEmbed[0], AuthorEmbed[1], AuthorEmbed[2])
+    // .setTitle(`📁 \`${repository}\`\n🌳 \`${branch}\``)
+    // .setDescription(this.getChangeLog(payload, hideLinks, censorUsername))
+    // .setTimestamp(Date.parse(latest.timestamp));
 
   if (!hideLinks) {
     embed.setURL(url);
