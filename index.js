@@ -17,14 +17,8 @@ async function main() {
     }
   
     if (!webhookUrl) {
-      core.warning("Missing webhook URL, using id and token fields to generate a webhook URL")
-  
-      if (!id || !token) {
-        core.setFailed("Webhook URL cannot be generated, please add `id` and `token` or `webhook_url` to the GitHub action")
-        process.exit(1)
-      }
-  
-      webhookUrl = `https://discord.com/api/webhooks/${id}/${token}`
+      core.setFailed("Missing webhook URL, using id and token fields to generate a webhook URL")
+      process.exit(1)
     }
   
     await webhooks.send(
