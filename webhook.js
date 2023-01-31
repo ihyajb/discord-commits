@@ -27,18 +27,17 @@ module.exports.send = (
     let latest = commits[0];
     const count = size == 1 ? "Commit" : " Commits";
 
-    //   let AuthorEmbed = [
-    //     `${latest.author.username} | ⚡ ${size} ${count}`,
-    //     `https://avatars.githubusercontent.com/${latest.author.username}`,
-    //     `https://github.com/${latest.author.username}`,
-    //   ]
+      let AuthorEmbed = [
+        `${latest.author.username} | ⚡ ${size} ${count}`,
+        `https://avatars.githubusercontent.com/${latest.author.username}`,
+        `https://github.com/${latest.author.username}`,
+      ]
 
     let embed = new discord.EmbedBuilder()
         .setDescription(this.getChangeLog(payload, hideLinks, censorUsername))
         .setColor('Orange')
-    // .setAuthor(AuthorEmbed[0], AuthorEmbed[1], AuthorEmbed[2])
+        .setAuthor(AuthorEmbed[0], AuthorEmbed[1], AuthorEmbed[2])
         .setTitle(`📁 \`${repository}\`\n🌳 \`${branch}\``)
-    // .setDescription(this.getChangeLog(payload, hideLinks, censorUsername))
     // .setTimestamp(Date.parse(latest.timestamp));
 
     if (!hideLinks) {
