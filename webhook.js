@@ -20,8 +20,6 @@ module.exports.send = (
         core.warning(`Aborting analysis, found no commits.`);
     }
 
-    // core.debug(`Received payload: ${JSON.stringify(payload, null, 2)}`);
-    // core.debug(`Received ${commits.length}/${size} commits...`);
     core.info("Constructing Embed...");
 
     let latest = commits[0];
@@ -35,7 +33,7 @@ module.exports.send = (
 
     let embed = new discord.EmbedBuilder()
         .setDescription(this.getChangeLog(payload, hideLinks, censorUsername))
-        .setColor('Orange')
+        .setColor(color)
         .setAuthor({name: AuthorEmbed[0], iconURL: AuthorEmbed[1], url: AuthorEmbed[2]})
         .setTitle(`📁 \`${repository}\`\n🌳 \`${branch}\``)
     // .setTimestamp(Date.parse(latest.timestamp));
