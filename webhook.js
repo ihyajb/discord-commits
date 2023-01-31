@@ -98,6 +98,8 @@ module.exports.getChangeLog = (payload, hideLinks, censorUsername) => {
         let sha = commit.id.substring(0, 6);
         let message
 
+        core.debug(commit.message)
+
         if (commit.message.length > MAX_MESSAGE_LENGTH) {
             message = commit.message.substring(0, MAX_MESSAGE_LENGTH) + "..."
         } else {
