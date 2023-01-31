@@ -35,9 +35,9 @@ module.exports.send = (
 
     let embed = new discord.EmbedBuilder()
         .setDescription(this.getChangeLog(payload, hideLinks, censorUsername))
-    // .setColor(color)
+        .setColor('Orange')
     // .setAuthor(AuthorEmbed[0], AuthorEmbed[1], AuthorEmbed[2])
-    // .setTitle(`📁 \`${repository}\`\n🌳 \`${branch}\``)
+        .setTitle(`📁 \`${repository}\`\n🌳 \`${branch}\``)
     // .setDescription(this.getChangeLog(payload, hideLinks, censorUsername))
     // .setTimestamp(Date.parse(latest.timestamp));
 
