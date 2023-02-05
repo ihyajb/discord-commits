@@ -17,3 +17,4 @@ jobs:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           hide_links: true
           censor_username: false
+          color: d8a82d
