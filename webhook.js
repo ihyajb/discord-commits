@@ -31,6 +31,7 @@ module.exports.send = (
         `https://github.com/${latest.author.username}`,
       ]
 
+      core.info(color);
     let embed = new discord.EmbedBuilder()
         .setDescription(this.getChangeLog(payload, hideLinks, censorUsername))
         .setColor(color)
@@ -95,9 +96,6 @@ module.exports.getChangeLog = (payload, hideLinks, censorUsername) => {
 
         let sha = commit.id.substring(0, 6);
         let message
-
-        core.debug(commit.message)
-
         if (commit.message.length > MAX_MESSAGE_LENGTH) {
             message = commit.message.substring(0, MAX_MESSAGE_LENGTH) + "..."
         } else {
