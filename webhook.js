@@ -12,7 +12,7 @@ module.exports.send = (
     const repository = payload.repository.full_name;
     const commits = payload.commits;
     const size = commits.length;
-    const branch = payload.ref.split("/")[payload.ref.split("/").length - 1];
+    const branch = payload.ref.split("/")[payload.ref.split("/").length - 1]; 
     const url = payload.compare;
     censorUsername = censorUsername.toString();
 
