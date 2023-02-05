@@ -11,8 +11,6 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install NPM Dependencies (prod)
-        run: npm install
       - name: Send message to discord
         uses: ihyajb/discord-commits@main 
         with:
