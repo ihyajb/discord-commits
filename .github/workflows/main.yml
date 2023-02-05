@@ -12,9 +12,9 @@ jobs:
           node-version: 16
 
       - name: Install NPM Dependencies (prod)
-        run: npm install --frozen-lockfile --production
+        run: npm install
       - name: Send message to discord
-        uses: ./ # Uses an action in the root directory
+        uses: ihyajb/discord-commits@main 
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           hide_links: true
