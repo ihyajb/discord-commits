@@ -34,7 +34,7 @@ module.exports.send = (
 
     let embed = new discord.EmbedBuilder()
     if (hideCommits) {
-        embed.setDescription(`${size} new ${count} to ${repository}:${branch}`)
+        embed.setDescription(`${size} new ${count} to \`${repository}:${branch}\``)
             .setColor(color)
     } else {
         embed.setDescription(this.getChangeLog(payload, hideLinks, censorUsername))
