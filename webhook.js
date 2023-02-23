@@ -33,15 +33,10 @@ module.exports.send = (
     ]
 
     let embed = new discord.EmbedBuilder()
-    if (hideCommits) {
-        embed.setDescription(`${size} new ${count} to \`${repository}:${branch}\``)
-            .setColor(color)
-    } else {
-        embed.setDescription(this.getChangeLog(payload, hideLinks, censorUsername))
-            .setColor(color)
-            .setAuthor({ name: AuthorEmbed[0], iconURL: AuthorEmbed[1], url: AuthorEmbed[2] })
-            .setTitle(`📁 \`${repository}\`\n🌳 \`${branch}\``)
-    }
+        .setDescription(this.getChangeLog(payload, hideLinks, censorUsername))
+        .setColor(color)
+        .setAuthor({ name: AuthorEmbed[0], iconURL: AuthorEmbed[1], url: AuthorEmbed[2] })
+        .setTitle(`📁 \`${repository}\`\n🌳 \`${branch}\``)
 
     if (!hideLinks) {
         embed.setURL(url);
