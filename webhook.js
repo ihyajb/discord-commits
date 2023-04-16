@@ -1,6 +1,6 @@
 const discord = require("discord.js");
 const core = require("@actions/core");
-const MAX_MESSAGE_LENGTH = 128;
+const MAX_MESSAGE_LENGTH = 256;
 
 module.exports.send = (
     webhookUrl,
@@ -94,7 +94,7 @@ module.exports.getChangeLog = (payload, hideLinks, censorUsername) => {
             commit.message = commit.message.replaceAll(repository.full_name, `${firstRepository}...${lastRepository}`);
         }
 
-        let sha = commit.id.substring(0, 6);
+        let sha = commit.id.substring(0, 7);
         let message
         if (commit.message.length > MAX_MESSAGE_LENGTH) {
             message = commit.message.substring(0, MAX_MESSAGE_LENGTH) + "..."
