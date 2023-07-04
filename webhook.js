@@ -81,7 +81,6 @@ module.exports.getChangeLog = (payload, hideLinks, censorUsername) => {
         let commit = commits[i];
         const firstUsername = commit.author.username[0];
         const lastUsername = commit.author.username[commit.author.username.length - 1];
-        let username = commit.author.username;
         if (censorUsername == 'true') {
             username = `${firstUsername}...${lastUsername}`;
         }
@@ -99,7 +98,9 @@ module.exports.getChangeLog = (payload, hideLinks, censorUsername) => {
         if (commit.message.length > MAX_MESSAGE_LENGTH) {
             message = commit.message.substring(0, MAX_MESSAGE_LENGTH) + "..."
         } else {
-            message = `\`${sha}\` ${commit.message} by *@${username}*\n`
+            // message = `\`${sha}\` ${commit.message} by *@${username}*\n`
+            let newMessage = commit.message.replaceAll('\n\n', '\n')
+            message = `\`${sha}\` ${commit.message}.\n`
         }
 
         // changelog += message.replaceAll('\n\n', '\n > ')
