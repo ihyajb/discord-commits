@@ -100,7 +100,7 @@ module.exports.getChangeLog = (payload, hideLinks, censorUsername) => {
         } else {
             // message = `\`${sha}\` ${commit.message} by *@${username}*\n`
             let newMessage = commit.message.replaceAll('\n\n', '\n> ')
-            message = `\`${sha}\` ${newMessage}.\n\n`
+            message = `\`${sha}\` ${newMessage}\n\n`
         }
 
         // changelog += message.replaceAll('\n\n', '\n > ')
