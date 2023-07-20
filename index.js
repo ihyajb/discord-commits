@@ -8,6 +8,7 @@ async function main() {
     const color = core.getInput("color");
     const customRepoName = core.getInput("repo_name");
     const censorUsername = core.getInput("censor_username");
+    const threadID = core.getInput("threadID");
   
     let payload = github.context.payload;
     console.log(payload)
@@ -26,7 +27,8 @@ async function main() {
       payload,
       hideLinks,
       censorUsername,
-      color
+      color,
+      threadID,
     );
   }
 

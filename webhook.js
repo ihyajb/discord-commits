@@ -7,7 +7,8 @@ module.exports.send = (
     payload,
     hideLinks,
     censorUsername,
-    color
+    color,
+    threadID,
 ) => {
     const repository = payload.repository.full_name;
     const commits = payload.commits;
@@ -46,6 +47,9 @@ module.exports.send = (
     return new Promise((resolve, reject) => {
         let client;
         core.info("Preparing Discord webhook client...");
+        if (threadID) {
+            webhookUrl = webhookUrl + '?thread_id=' + threadID
+        }
 
         try {
             client = new discord.WebhookClient({ url: webhookUrl });
