@@ -50,7 +50,7 @@ module.exports.send = (
         if (threadID) {
             webhookUrl = webhookUrl + '?thread_id=' + threadID
         }
-        core.info(webhookUrl)
+
         try {
             client = new discord.WebhookClient({ url: webhookUrl });
         } catch (error) {
