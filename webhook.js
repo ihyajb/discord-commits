@@ -46,7 +46,7 @@ module.exports.send = (
     return new Promise((resolve, reject) => {
         let client;
         core.info("Preparing Discord webhook client...");
-
+        core.info(webhookUrl)
         try {
             client = new discord.WebhookClient({ url: webhookUrl });
         } catch (error) {
