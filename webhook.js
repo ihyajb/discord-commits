@@ -63,3 +63,5 @@ module.exports.getChangeLog = (commits) => {
 
     return changelog;
 };
+
+// Test
