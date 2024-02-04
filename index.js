@@ -39,7 +39,8 @@ async function main() {
 	await webhooks.send(
 		webhookUrl,
 		payload.repository.full_name,
-		payload.compare,
+		// payload.compare,
+		payload.pusher.name,
 		commits,
 		color
 	);

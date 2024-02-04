@@ -2,20 +2,19 @@ const discord = require("discord.js");
 const core = require("@actions/core");
 const MAX_MESSAGE_LENGTH = 256;
 
-module.exports.send = async (webhookUrl, repository, url, commits, color) => {
+module.exports.send = async (webhookUrl, repository, pusher, commits, color) => {
     const size = commits.length;
 
     core.info("Constructing Embed...");
 
-    const latest = commits[0];
+    // const latest = commits[0];
 
-    console.log(JSON.stringify(latest))
     const count = size === 1 ? "" : "s";
 
     const authorEmbed = [
-        `⚡ ${latest.author.username} pushed ${size} commit${count}`,
-        `https://avatars.githubusercontent.com/${latest.author.username}`,
-        `https://github.com/${latest.author.username}`,
+        `⚡ ${pusher} pushed ${size} commit${count}`,
+        `https://avatars.githubusercontent.com/${pusher}`,
+        `https://github.com/${pusher}`,
     ];
 
     core.info(color);
@@ -24,7 +23,6 @@ module.exports.send = async (webhookUrl, repository, url, commits, color) => {
         .setColor(color)
         .setAuthor({ name: authorEmbed[0], iconURL: authorEmbed[1], url: authorEmbed[2] })
         .setTimestamp()
-        .setURL(url)
         .setTitle(`📁 \`${repository}\``);
 
     try {
@@ -49,9 +47,13 @@ module.exports.getChangeLog = (commits) => {
         }
 
         const sha = commit.id.slice(0, 6);
+        const messageParts = commit.message.split('\n\n');
+        const title = messageParts[0];
+        const details = messageParts.slice(1).join('\n\n');
+
         let message = commit.message.length > MAX_MESSAGE_LENGTH
-            ? `${commit.message.slice(0, MAX_MESSAGE_LENGTH)}...`
-            : `\`${sha}\` — ${commit.message.replaceAll('\n\n', '\n').replaceAll('\n\n', '\n')}\n\n`;
+            ? `${title.slice(0, MAX_MESSAGE_LENGTH)}...`
+            : `\`${sha}\` — ${title}\n\n${details}\n\n`;
 
         changelog += message;
     });
