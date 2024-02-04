@@ -23,10 +23,10 @@ module.exports.send = (
     core.info("Constructing Embed...");
 
     let latest = commits[0];
-    const count = size == 1 ? "Commit" : " Commits";
+    const count = size == 1 ? "commit" : " commits";
 
       let AuthorEmbed = [
-        `${latest.author.username} | ⚡ ${size} ${count}`,
+        `⚡ ${latest.author.username} pushed ${size} ${count}`,
         `https://avatars.githubusercontent.com/${latest.author.username}`,
         `https://github.com/${latest.author.username}`,
       ]
@@ -93,14 +93,14 @@ module.exports.getChangeLog = (payload, hideLinks, censorUsername) => {
             commit.message = commit.message.replaceAll(repository.full_name, `${firstRepository}...${lastRepository}`);
         }
 
-        let sha = commit.id.substring(0, 7);
+        let sha = commit.id.substring(0, 6);
         let message
         if (commit.message.length > MAX_MESSAGE_LENGTH) {
             message = commit.message.substring(0, MAX_MESSAGE_LENGTH) + "..."
         } else {
             // message = `\`${sha}\` ${commit.message} by *@${username}*\n`
             let newMessage = commit.message.replaceAll('\n\n', '\n')
-            message = `\`${sha}\` ${newMessage}\n\n`
+            message = `\`${sha}\` — ${newMessage}\n\n`
         }
 
         // changelog += message.replaceAll('\n\n', '\n > ')
