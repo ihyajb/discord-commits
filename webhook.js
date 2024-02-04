@@ -2,13 +2,12 @@ const discord = require("discord.js");
 const core = require("@actions/core");
 const MAX_MESSAGE_LENGTH = 256;
 
-module.exports.send = async (webhookUrl, payload, hideLinks, censorUsername, color) => {
+module.exports.send = async (webhookUrl, payload, hideLinks, color) => {
     const repository = payload.repository.full_name;
     const commits = payload.commits;
     const size = commits.length;
-    const branch = payload.ref.split("/").pop();
+    // const branch = payload.ref.split("/").pop();
     const url = payload.compare;
-    censorUsername = censorUsername.toString();
 
     if (size === 0) {
         core.warning(`Aborting analysis, found no commits.`);
@@ -17,20 +16,21 @@ module.exports.send = async (webhookUrl, payload, hideLinks, censorUsername, col
     core.info("Constructing Embed...");
 
     const latest = commits[0];
-    const count = size === 1 ? "commit" : "commits";
+    const count = size === 1 ? "" : "s";
 
     const authorEmbed = [
-        `⚡ ${latest.author.username} pushed ${size} ${count}`,
+        `⚡ ${latest.author.username} pushed ${size} commit${count}`,
         `https://avatars.githubusercontent.com/${latest.author.username}`,
         `https://github.com/${latest.author.username}`,
     ];
 
     core.info(color);
     const embed = new discord.EmbedBuilder()
-        .setDescription(this.getChangeLog(payload, hideLinks, censorUsername))
+        .setDescription(this.getChangeLog(payload, hideLinks))
         .setColor(color)
         .setAuthor({ name: authorEmbed[0], iconURL: authorEmbed[1], url: authorEmbed[2] })
-        .setTitle(`📁 \`${repository}\`\n🌳 \`${branch}\``);
+        .setTimestamp()
+        .setTitle(`📁 \`${repository}\``);
 
     if (!hideLinks) {
         embed.setURL(url);
@@ -47,20 +47,16 @@ module.exports.send = async (webhookUrl, payload, hideLinks, censorUsername, col
     }
 };
 
-module.exports.getChangeLog = (payload, hideLinks, censorUsername) => {
+module.exports.getChangeLog = (payload, hideLinks) => {
     core.info("Constructing Changelog...");
     const commits = payload.commits;
     let changelog = "";
 
     commits.forEach((commit, index) => {
-        if (index > 4) {
+        if (index > 7) {
             changelog += `+ ${commits.length - index} more...\n`;
             return;
         }
-
-        const firstUsername = commit.author.username[0];
-        const lastUsername = commit.author.username.slice(-1);
-        const username = censorUsername === 'true' ? `${firstUsername}...${lastUsername}` : commit.author.username;
 
         const repository = payload.repository;
 
