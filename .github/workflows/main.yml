@@ -3,16 +3,11 @@ on: [push]
 jobs:
   disord_test_message:
     runs-on: ubuntu-latest
-    name: Ajs Discord Commits
+    name: Push to Discord
     steps:
 
-      - name: Use Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
       - name: Send message to discord
-        uses: ihyajb/discord-commits@main 
+        uses: ihyajb/discord-commits@test 
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           hide_links: true
