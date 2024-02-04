@@ -8,8 +8,15 @@ async function main() {
 	const color = core.getInput("color");
 	const customRepoName = core.getInput("repo_name");
 
-	let payload = github.context.payload;
-	console.log(payload)
+	const payload = github.context.payload
+	const commits = payload.commits
+	const size = commits.length
+
+	console.log(`Received payload.`)
+	console.log(`Received ${commits.length}/${size} commits...`)
+	console.log(`------------------------`)
+	console.log(`Full payload: ${JSON.stringify(payload)}`)
+	console.log(`------------------------`)
 
 	if (customRepoName !== "") {
 		payload.repository.full_name = customRepoName;
@@ -20,17 +27,27 @@ async function main() {
 		process.exit(1)
 	}
 
+	if (commits.length === 0) {
+		console.log(`No commits, skipping...`)
+		return
+	  }
+	  if (payload.sender.type === 'Bot') {
+		console.log(`Commit by bot, skipping...`)
+		return
+	  }
+
 	await webhooks.send(
 		webhookUrl,
-		payload,
+		payload.repository.full_name,
+		commits,
+		payload.compare,
 		hideLinks,
 		color
 	);
 }
 
-main()
-	.then(() => process.exit(0))
-	.catch((error) => {
-		core.setFailed(error)
-		process.exit(1)
-	});
+try {
+	main()
+} catch (error) {
+	core.setFailed(error.message)
+}

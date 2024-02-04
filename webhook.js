@@ -2,16 +2,8 @@ const discord = require("discord.js");
 const core = require("@actions/core");
 const MAX_MESSAGE_LENGTH = 256;
 
-module.exports.send = async (webhookUrl, payload, hideLinks, color) => {
-    const repository = payload.repository.full_name;
-    const commits = payload.commits;
+module.exports.send = async (webhookUrl, repository, url, commits, color) => {
     const size = commits.length;
-    // const branch = payload.ref.split("/").pop();
-    const url = payload.compare;
-
-    if (size === 0) {
-        core.warning(`Aborting analysis, found no commits.`);
-    }
 
     core.info("Constructing Embed...");
 
@@ -26,15 +18,12 @@ module.exports.send = async (webhookUrl, payload, hideLinks, color) => {
 
     core.info(color);
     const embed = new discord.EmbedBuilder()
-        .setDescription(this.getChangeLog(payload, hideLinks))
+        .setDescription(this.getChangeLog(commits))
         .setColor(color)
         .setAuthor({ name: authorEmbed[0], iconURL: authorEmbed[1], url: authorEmbed[2] })
         .setTimestamp()
+        .setURL(url)
         .setTitle(`📁 \`${repository}\``);
-
-    if (!hideLinks) {
-        embed.setURL(url);
-    }
 
     try {
         const client = new discord.WebhookClient({ url: webhookUrl });
@@ -47,23 +36,14 @@ module.exports.send = async (webhookUrl, payload, hideLinks, color) => {
     }
 };
 
-module.exports.getChangeLog = (payload, hideLinks) => {
+module.exports.getChangeLog = (commits) => {
     core.info("Constructing Changelog...");
-    const commits = payload.commits;
     let changelog = "";
 
     commits.forEach((commit, index) => {
         if (index > 7) {
             changelog += `+ ${commits.length - index} more...\n`;
             return;
-        }
-
-        const repository = payload.repository;
-
-        if (commit.message.includes(repository.full_name) && hideLinks) {
-            const firstRepository = repository.full_name[0];
-            const lastRepository = repository.full_name.slice(-1);
-            commit.message = commit.message.replace(new RegExp(repository.full_name, 'g'), `${firstRepository}...${lastRepository}`);
         }
 
         const sha = commit.id.slice(0, 6);
@@ -76,14 +56,3 @@ module.exports.getChangeLog = (payload, hideLinks) => {
 
     return changelog;
 };
-
-
-// Test
-// Test
-// Test
-// Test
-// Test
-// Test
-// Test
-// Test
-// Test
