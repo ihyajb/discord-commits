@@ -23,7 +23,7 @@ module.exports.send = async (webhookUrl, repository, pusher, commits, color) => 
         .setColor(color)
         .setAuthor({ name: authorEmbed[0], iconURL: authorEmbed[1], url: authorEmbed[2] })
         .setTimestamp()
-        .setTitle(`\`📁 ${repository}\``);
+        .setTitle(`📁 \`${repository}\``);
 
     try {
         const client = new discord.WebhookClient({ url: webhookUrl });
@@ -56,7 +56,7 @@ module.exports.getChangeLog = (commits) => {
 
         let message = commit.message.length > MAX_MESSAGE_LENGTH
             ? `${commit.message.slice(0, MAX_MESSAGE_LENGTH)}...`
-            : `[\`${sha}\`](${commit.url}) — ${title}${details ? `\n${details}\n` : ''}\n`;
+            : `[\`${sha}\`](${commit.url}) — ${title}${details ? `\n${details}` : ''}\n\n`;
             // : `[\`${sha}\`](${commit.url}) — ${title}${details ? `\n${details}` : ''} (${commit.author.username})\n\n`;
 
         changelog += message;
