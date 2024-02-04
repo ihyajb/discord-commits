@@ -8,6 +8,8 @@ module.exports.send = async (webhookUrl, repository, url, commits, color) => {
     core.info("Constructing Embed...");
 
     const latest = commits[0];
+
+    JSON.stringify(latest)
     const count = size === 1 ? "" : "s";
 
     const authorEmbed = [
