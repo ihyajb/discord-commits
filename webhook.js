@@ -47,12 +47,17 @@ module.exports.getChangeLog = (commits) => {
         }
 
         const sha = commit.id.slice(0, 6);
-        const [title, details] = commit.message.split('\n\n');
-        const formattedDetails = details ? details.replace(/\n/g, ' ') : ''; // Replace newlines with space
+        const messageParts = commit.message.split('\n\n').map(part => part.replace(/\n/g, ''));
+
+        const title = messageParts[0];
+        const details = messageParts.slice(1).join('\n\n');
+
+        console.log(title, details)
 
         let message = commit.message.length > MAX_MESSAGE_LENGTH
             ? `${commit.message.slice(0, MAX_MESSAGE_LENGTH)}...`
-            : `[\`${sha}\`](${commit.url}) — ${title}${formattedDetails ? `\n\n${formattedDetails}` : ''}\n\n`;
+            : `[\`${sha}\`](${commit.url}) — ${title}${details ? `\n${details}` : ''}\n\n`;
+            // : `[\`${sha}\`](${commit.url}) — ${title}${details ? `\n${details}` : ''} (${commit.author.username})\n\n`;
 
         changelog += message;
     });
