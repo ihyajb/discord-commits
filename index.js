@@ -4,7 +4,6 @@ const webhooks = require('./webhook')
 
 async function main() {
 	let webhookUrl = core.getInput("webhook_url");
-	const hideLinks = core.getInput("hide_links") || false;
 	const color = core.getInput("color");
 	const customRepoName = core.getInput("repo_name");
 
