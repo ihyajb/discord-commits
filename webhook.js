@@ -54,9 +54,12 @@ module.exports.getChangeLog = (commits) => {
         // Remove newlines from the title
         const title = titleWithNewlines.replace(/\n/g, '');
 
+        // Use logical nullish assignment to set details to an empty string if it's undefined
+        const sanitizedDetails = details ?? '';
+
         let message = commit.message.length > MAX_MESSAGE_LENGTH
             ? `${commit.message.slice(0, MAX_MESSAGE_LENGTH)}...`
-            : `[\`${sha}\`](${commit.url}) — ${title}\n${details}\n\n`;
+            : `[\`${sha}\`](${commit.url}) — ${title}\n${sanitizedDetails}\n\n`;
 
         changelog += message;
     });
