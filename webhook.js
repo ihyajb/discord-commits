@@ -47,10 +47,7 @@ module.exports.getChangeLog = (commits) => {
         }
 
         const sha = commit.id.slice(0, 6);
-        const messageParts = commit.message.split('\n\n');
-
-        const title = messageParts[0];
-        const details = messageParts.slice(1).join('\n\n'); // Keep newlines here
+        const [title, details] = commit.message.split('\n\n').map(part => part.replace(/\n/g, ''));
 
         let message = commit.message.length > MAX_MESSAGE_LENGTH
             ? `${commit.message.slice(0, MAX_MESSAGE_LENGTH)}...`
