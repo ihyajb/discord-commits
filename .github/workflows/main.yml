@@ -1,8 +1,4 @@
-on:
-  push:
-  pull_request_target:
-    types:
-      - opened
+on: [push]
 
 jobs:
   disord_test_message:
