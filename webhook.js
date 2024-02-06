@@ -59,7 +59,7 @@ module.exports.getChangeLog = (commits) => {
 
         let message = commit.message.length > MAX_MESSAGE_LENGTH
             ? `${commit.message.slice(0, MAX_MESSAGE_LENGTH)}...`
-            : `[\`${sha}\`](${commit.url}) — ${title}\n${sanitizedDetails}\n\n`;
+            : `[\`${sha}\`](${commit.url}) — ${title}\n${sanitizedDetails}\n`;
 
         changelog += message;
     });
