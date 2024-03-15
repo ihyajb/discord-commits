@@ -30,10 +30,10 @@ async function main() {
 		console.log(`No commits, skipping...`)
 		return
 	  }
-	  if (payload.sender.type === 'Bot') {
-		console.log(`Commit by bot, skipping...`)
-		return
-	  }
+	//   if (payload.sender.type === 'Bot') {
+	// 	console.log(`Commit by bot, skipping...`)
+	// 	return
+	//   }
 
 	await webhooks.send(
 		webhookUrl,
