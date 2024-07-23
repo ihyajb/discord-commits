@@ -54,12 +54,12 @@ module.exports.getChangeLog = (commits) => {
         const description = messageParts[1] || '';
 
         // Process co-authors
-        let coAuthorsText = '';
         const coAuthors = commit.message.split('\n').filter(line => line.startsWith('Co-Authored-By:')).map(line => {
             const match = line.match(/Co-Authored-By: (.+?) <\/?/);
             return match ? match[1] : '';
         }).filter(Boolean);
 
+        let coAuthorsText = '';
         if (coAuthors.length > 0) {
             coAuthorsText = `-# Co-Authored by: ${coAuthors.join(', ')}\n`;
         }
@@ -67,7 +67,7 @@ module.exports.getChangeLog = (commits) => {
         // Create the formatted message
         let message = commit.message.length > MAX_MESSAGE_LENGTH
             ? `${commit.message.slice(0, MAX_MESSAGE_LENGTH)}...`
-            : `[\`${sha}\`](${commit.url}) — ${title}\n${description}\n${coAuthorsText}`;
+            : `[\`${sha}\`](${commit.url}) — ${title}\n${coAuthorsText}${description}`;
 
         changelog += message;
 
