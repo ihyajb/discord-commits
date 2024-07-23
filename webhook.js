@@ -49,15 +49,14 @@ module.exports.getChangeLog = (commits) => {
         const sha = commit.id.slice(0, 6);
 
         // Split commit.message into parts
-        const messageParts = commit.message.split('\n\n');
+        let messageParts = commit.message.split('\n\n');
         const title = messageParts[0].replace(/\n/g, '');
-        let description = messageParts[1] || '';
-
-        // Remove everything after the first "Co-Authored-By:"
+        
+        // Find the index of the first "Co-Authored-By:"
         const coAuthorsIndex = commit.message.indexOf('Co-Authored-By:');
-        if (coAuthorsIndex !== -1) {
-            description = description.split('\n\n')[0];
-        }
+        const description = coAuthorsIndex !== -1 
+            ? messageParts[1]?.split('\n\n')[0] || '' 
+            : messageParts[1] || '';
 
         // Process co-authors
         let coAuthorsText = '';
@@ -71,9 +70,7 @@ module.exports.getChangeLog = (commits) => {
         }
 
         // Create the formatted message
-        let message = commit.message.length > MAX_MESSAGE_LENGTH
-            ? `${commit.message.slice(0, MAX_MESSAGE_LENGTH)}...`
-            : `[\`${sha}\`](${commit.url}) — ${title}\n${description}\n${coAuthorsText}`;
+        let message = `[\`${sha}\`](${commit.url}) — ${title}\n${description}\n${coAuthorsText}`;
 
         changelog += message;
 
