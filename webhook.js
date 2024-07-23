@@ -84,5 +84,3 @@ module.exports.getChangeLog = (commits) => {
 
     return changelog;
 };
-
-//test2
