@@ -48,7 +48,7 @@ module.exports.getChangeLog = (commits) => {
 
         const sha = commit.id.slice(0, 6);
 
-        // Split commit.message into title and description
+        // Split commit.message into title, description, and co-authors
         const [titleWithNewlines, descriptionWithNewlines, ...coAuthors] = commit.message.split('\n\n');
 
         // Remove newlines from the title
@@ -60,7 +60,8 @@ module.exports.getChangeLog = (commits) => {
         // Process co-authors if any
         let coAuthorsText = '';
         if (coAuthors.length > 0) {
-            coAuthorsText = `-# ${coAuthors.join('\n')}\n`;
+            const coAuthorUsernames = coAuthors.map(coAuthor => coAuthor.split(' ')[2]);
+            coAuthorsText = `-# Co-Authors: ${coAuthorUsernames.join(', ')}\n`;
         }
 
         // Create the formatted message
