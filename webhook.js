@@ -48,20 +48,18 @@ module.exports.getChangeLog = (commits) => {
 
         const sha = commit.id.slice(0, 6);
 
-        // Split commit.message into title, description, and co-authors
+        // Split commit.message into parts
         const messageParts = commit.message.split('\n\n');
         const title = messageParts[0].replace(/\n/g, '');
         const description = messageParts[1] || '';
 
-        // Process co-authors if any
+        // Process co-authors
         let coAuthorsText = '';
-        const coAuthors = [];
-        for (let i = 2; i < messageParts.length; i++) {
-            const match = messageParts[i].match(/Co-Authored-By: (.+?) </);
-            if (match) {
-                coAuthors.push(match[1]);
-            }
-        }
+        const coAuthors = commit.message.split('\n').filter(line => line.startsWith('Co-Authored-By:')).map(line => {
+            const match = line.match(/Co-Authored-By: (.+?) <\/?/);
+            return match ? match[1] : '';
+        }).filter(Boolean);
+
         if (coAuthors.length > 0) {
             coAuthorsText = coAuthors.map(author => `-# Co-Authored: ${author}`).join('\n') + '\n';
         }
