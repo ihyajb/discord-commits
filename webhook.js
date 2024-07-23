@@ -2,7 +2,7 @@ const discord = require("discord.js");
 const core = require("@actions/core");
 const MAX_MESSAGE_LENGTH = 256;
 
-module.exports.send = async (webhookUrl, repository, pusher, commits, color) => {
+module.exports.send = async (webhookUrl, repository, wasForced, pusher, commits, color) => {
     const size = commits.length;
 
     core.info("Constructing Embed...");
@@ -10,9 +10,10 @@ module.exports.send = async (webhookUrl, repository, pusher, commits, color) => 
     // const latest = commits[0];
 
     const count = size === 1 ? "" : "s";
+    const pushType = wasForced == true ? 'force pushed' : 'pushed'
 
     const authorEmbed = [
-        `⚡ ${pusher} pushed ${size} commit${count}`,
+        `⚡ ${pusher} ${pushType} ${size} commit${count}`,
         `https://avatars.githubusercontent.com/${pusher}`,
         `https://github.com/${pusher}`,
     ];
