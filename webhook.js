@@ -60,7 +60,10 @@ module.exports.getChangeLog = (commits) => {
         // Process co-authors if any
         let coAuthorsText = '';
         if (coAuthors.length > 0) {
-            const coAuthorUsernames = coAuthors.map(coAuthor => coAuthor.split(' ')[2]);
+            const coAuthorUsernames = coAuthors.map(coAuthor => {
+                const match = coAuthor.match(/Co-Authored-By: (.+?) </);
+                return match ? match[1] : '';
+            }).filter(Boolean);
             coAuthorsText = `-# Co-Authors: ${coAuthorUsernames.join(', ')}\n`;
         }
 
