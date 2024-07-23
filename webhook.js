@@ -36,6 +36,8 @@ module.exports.send = async (webhookUrl, repository, pusher, commits, color) => 
     }
 };
 
+//test
+
 module.exports.getChangeLog = (commits) => {
     core.info("Constructing Changelog...");
     let changelog = "";
