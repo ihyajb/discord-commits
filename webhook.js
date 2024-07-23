@@ -62,7 +62,7 @@ module.exports.getChangeLog = (commits) => {
         // Construct co-authors text
         let coAuthorsText = '';
         if (coAuthors.length > 0) {
-            coAuthorsText = `-# Co-Authored by: ${coAuthors.join(', ')}\n`;
+            coAuthorsText = `-# Co-Authored by: ${coAuthors.join(', ')}`;
         }
 
         // Create the formatted message
@@ -70,7 +70,9 @@ module.exports.getChangeLog = (commits) => {
         if (description) {
             message += `${description}\n`;
         }
-        message += coAuthorsText;
+        if (coAuthorsText) {
+            message += `${coAuthorsText}\n`;
+        }
 
         changelog += message;
 
