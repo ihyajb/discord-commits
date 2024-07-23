@@ -60,7 +60,7 @@ module.exports.getChangeLog = (commits) => {
         }).filter(Boolean);
 
         if (coAuthors.length > 0) {
-            coAuthorsText = `-# Co-Authors: ${coAuthors.join(', ')}\n`;
+            coAuthorsText = `-# Co-Authors: ${coAuthors.join(', ')}`;
         }
 
         // Determine the description by excluding co-authored lines
@@ -71,10 +71,8 @@ module.exports.getChangeLog = (commits) => {
         if (description) {
             message += `\n${description}`;
         }
-        if (coAuthors.length > 0) {
+        if (coAuthorsText) {
             message += `\n${coAuthorsText}`;
-        } else {
-            message += '\n';
         }
 
         changelog += message;
