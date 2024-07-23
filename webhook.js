@@ -61,7 +61,7 @@ module.exports.getChangeLog = (commits) => {
         }).filter(Boolean);
 
         if (coAuthors.length > 0) {
-            coAuthorsText = coAuthors.map(author => `-# Co-Authored: ${author}`).join('\n') + '\n';
+            coAuthorsText = `-# Co-Authored by: ${coAuthors.join(', ')}\n`;
         }
 
         // Create the formatted message
