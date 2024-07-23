@@ -57,7 +57,7 @@ module.exports.getChangeLog = (commits) => {
         let coAuthorsText = '';
         if (messageParts.length > 2) {
             const coAuthorUsernames = messageParts.slice(2).map(coAuthor => {
-                const match = coAuthor.match(/Co-Authored-By: (.+?) \</);
+                const match = coAuthor.match(/Co-Authored-By: (.+?) </);
                 return match ? match[1] : '';
             }).filter(Boolean);
             if (coAuthorUsernames.length > 0) {
