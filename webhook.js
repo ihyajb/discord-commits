@@ -52,7 +52,7 @@ module.exports.getChangeLog = (commits) => {
         let messageParts = commit.message.split('\n\n');
         const title = messageParts[0].replace(/\n/g, '');
 
-        // Extract and remove co-author lines
+        // Extract co-author lines
         let coAuthorsText = '';
         const coAuthors = commit.message.split('\n').filter(line => line.startsWith('Co-Authored-By:')).map(line => {
             const match = line.match(/Co-Authored-By: (.+?) <\/?/);
@@ -72,11 +72,7 @@ module.exports.getChangeLog = (commits) => {
             message += `\n${description}`;
         }
         if (coAuthorsText) {
-            if (!description) {
-                message += `\n${coAuthorsText}`;
-            } else {
-                message += `${coAuthorsText}`;
-            }
+            message += `\n${coAuthorsText}`;
         }
 
         changelog += message;
