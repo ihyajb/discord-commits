@@ -14,7 +14,7 @@ async function main() {
 	console.log(`Received payload.`)
 	console.log(`Received ${commits.length}/${size} commits...`)
 	console.log(`------------------------`)
-	console.log(`Full payload: ${JSON.stringify(payload)}`)
+	console.log(`Full payload: ${JSON.stringify(commits), null, 2}`)
 	console.log(`------------------------`)
 
 	if (customRepoName !== "") {
