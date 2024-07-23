@@ -48,15 +48,20 @@ module.exports.getChangeLog = (commits) => {
 
         const sha = commit.id.slice(0, 6);
 
-        // Remove co-authors lines
-        const cleanMessage = commit.message.split('\n').filter(line => !line.startsWith('Co-Authored-By:')).join('\n');
+        // Find the position of the first "Co-Authored-By:"
+        const coAuthorIndex = commit.message.indexOf('Co-Authored-By:');
 
-        // Split cleaned message into parts
+        // Remove everything before the first "Co-Authored-By:" if it exists
+        const cleanMessage = coAuthorIndex !== -1
+            ? commit.message.slice(0, coAuthorIndex).trim()
+            : commit.message;
+
+        // Split cleaned message into title and description
         const messageParts = cleanMessage.split('\n\n');
         const title = messageParts[0].replace(/\n/g, '');
         const description = messageParts.length > 1 ? messageParts.slice(1).join('\n\n') : '';
 
-        // Process co-authors again
+        // Process co-authors from the original message
         const coAuthors = commit.message.split('\n').filter(line => line.startsWith('Co-Authored-By:')).map(line => {
             const match = line.match(/Co-Authored-By: (.+?) <\/?/);
             return match ? match[1] : '';
