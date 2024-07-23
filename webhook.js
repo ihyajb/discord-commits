@@ -7,8 +7,6 @@ module.exports.send = async (webhookUrl, repository, pusher, commits, color) => 
 
     core.info("Constructing Embed...");
 
-    // const latest = commits[0];
-
     const count = size === 1 ? "" : "s";
 
     const authorEmbed = [
@@ -18,13 +16,16 @@ module.exports.send = async (webhookUrl, repository, pusher, commits, color) => 
     ];
 
     core.info(color);
+    const { changelog, coAuthors } = this.getChangeLog(commits);
+
     const embed = new discord.EmbedBuilder()
-        .setDescription(this.getChangeLog(commits))
+        .setDescription(changelog)
         .setColor(color)
         .setAuthor({ name: authorEmbed[0], iconURL: authorEmbed[1], url: authorEmbed[2] })
         .setTimestamp()
-        .setTitle(`\`📂: ${repository}\``);
-//test
+        .setTitle(`\`📂: ${repository}\``)
+        .setFooter({ text: coAuthors.join('\n') || 'No co-authors' });
+
     try {
         const client = new discord.WebhookClient({ url: webhookUrl });
         core.info("Sending webhook message...");
@@ -39,6 +40,7 @@ module.exports.send = async (webhookUrl, repository, pusher, commits, color) => 
 module.exports.getChangeLog = (commits) => {
     core.info("Constructing Changelog...");
     let changelog = "";
+    const coAuthors = new Set();
 
     commits.forEach((commit, index) => {
         if (index > 7) {
@@ -48,21 +50,26 @@ module.exports.getChangeLog = (commits) => {
 
         const sha = commit.id.slice(0, 6);
 
-        // Split commit.message into title and details
-        const [titleWithNewlines, details] = commit.message.split('\n\n');
+        // Split commit.message into title, details, and co-author
+        const [titleWithNewlines, detailsAndCoAuthor] = commit.message.split('\n\n');
 
         // Remove newlines from the title
         const title = titleWithNewlines.replace(/\n/g, '');
 
-        // Use logical nullish assignment to set details to an empty string if it's undefined
-        const sanitizedDetails = details ?? '';
+        const detailsParts = detailsAndCoAuthor?.split('\n\nCo-Authored-By: ') || [];
+        const details = detailsParts[0] ?? '';
+        const coAuthor = detailsParts[1] ?? '';
 
-        let message = commit.message.length > MAX_MESSAGE_LENGTH
-            ? `${commit.message.slice(0, MAX_MESSAGE_LENGTH)}...`
-            : `[\`${sha}\`](${commit.url}) — ${title}\n${sanitizedDetails}\n`;
+        if (coAuthor) {
+            coAuthors.add(`Co-Authored-By: ${coAuthor}`);
+        }
+
+        const sanitizedDetails = details;
+
+        let message = `${commit.message.length > MAX_MESSAGE_LENGTH ? commit.message.slice(0, MAX_MESSAGE_LENGTH) + '...' : `[${sha}](${commit.url}) — ${title}\n${sanitizedDetails}\n`}`;
 
         changelog += message;
     });
 
-    return changelog;
+    return { changelog, coAuthors: Array.from(coAuthors) };
 };
