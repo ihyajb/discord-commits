@@ -53,10 +53,10 @@ module.exports.getChangeLog = (commits) => {
 
         // Remove everything before the first "Co-Authored-By:" if it exists
         const cleanMessage = coAuthorIndex !== -1
-            ? commit.message.slice(0, coAuthorIndex).trim()
+            ? commit.message.slice(coAuthorIndex).trim()
             : commit.message;
 
-        // Split cleaned message into title and description
+        // Split the cleaned message into parts
         const messageParts = cleanMessage.split('\n\n');
         const title = messageParts[0].replace(/\n/g, '');
         const description = messageParts.length > 1 ? messageParts.slice(1).join('\n\n') : '';
