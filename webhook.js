@@ -83,7 +83,7 @@ module.exports.getChangeLog = (commits) => {
 
         // Add a blank line if this is not the last commit
         if (index < commits.length - 1) {
-            changelog += '\nFUCKKKKK';
+            changelog += '\n\n';
         }
     });
 
