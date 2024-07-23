@@ -24,7 +24,7 @@ module.exports.send = async (webhookUrl, repository, pusher, commits, color) => 
         .setAuthor({ name: authorEmbed[0], iconURL: authorEmbed[1], url: authorEmbed[2] })
         .setTimestamp()
         .setTitle(`\`📂: ${repository}\``);
-
+//test
     try {
         const client = new discord.WebhookClient({ url: webhookUrl });
         core.info("Sending webhook message...");
