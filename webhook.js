@@ -67,11 +67,15 @@ module.exports.getChangeLog = (commits) => {
         let description = messageParts.slice(1).join('\n\n').split('\n').filter(line => !line.startsWith('Co-Authored-By:')).join('\n');
 
         // Create the formatted message
-        let message = `[\`${sha}\`](${commit.url}) — ${title}\n`;
+        let message = `[\`${sha}\`](${commit.url}) — ${title}`;
         if (description) {
-            message += `${description}\n`;
+            message += `\n${description}`;
         }
-        message += coAuthorsText;
+        if (coAuthors.length > 0) {
+            message += `\n${coAuthorsText}`;
+        } else {
+            message += '\n';
+        }
 
         changelog += message;
 
