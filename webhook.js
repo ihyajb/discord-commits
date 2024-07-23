@@ -48,21 +48,24 @@ module.exports.getChangeLog = (commits) => {
 
         const sha = commit.id.slice(0, 6);
 
-        // Split commit.message into parts
-        const messageParts = commit.message.split('\n\n');
-        const title = messageParts[0].replace(/\n/g, '');
-        const description = messageParts[1] || '';
-
         // Extract co-authors
         const coAuthors = commit.message.split('\n').filter(line => line.startsWith('Co-Authored-By:')).map(line => {
             const match = line.match(/Co-Authored-By: (.+?) <\/?/);
             return match ? match[1] : '';
         }).filter(Boolean);
 
+        // Remove co-authors from the commit message
+        let cleanedMessage = commit.message.split('\n').filter(line => !line.startsWith('Co-Authored-By:')).join('\n').trim();
+        
+        // Split cleanedMessage into title and description
+        const messageParts = cleanedMessage.split('\n\n');
+        const title = messageParts[0].replace(/\n/g, '');
+        const description = messageParts[1] || '';
+
         // Construct co-authors text
         let coAuthorsText = '';
         if (coAuthors.length > 0) {
-            coAuthorsText = `-# Co-Authored by: ${coAuthors.join(', ')}`;
+            coAuthorsText = `-# Co-Authors by: ${coAuthors.join(', ')}\n`;
         }
 
         // Create the formatted message
@@ -71,7 +74,7 @@ module.exports.getChangeLog = (commits) => {
             message += `${description}\n`;
         }
         if (coAuthorsText) {
-            message += `${coAuthorsText}\n`;
+            message += coAuthorsText;
         }
 
         changelog += message;
