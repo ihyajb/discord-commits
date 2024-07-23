@@ -68,7 +68,7 @@ module.exports.getChangeLog = (commits) => {
         let description = messageParts.slice(1).join('\n\n').split('\n').filter(line => !line.startsWith('Co-Authored-By:')).join('\n');
 
         // Create the formatted message
-        let message = `[\`${sha}\`](${commit.url}) — ${title}`;
+        let message = `[\`${sha}\`](${commit.url}) — **${title}**`;
         if (description) {
             message += `\n${description}`;
         }
@@ -92,3 +92,5 @@ module.exports.getChangeLog = (commits) => {
 };
 
 //test3
+//text4
+//test5
