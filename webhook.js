@@ -24,7 +24,7 @@ module.exports.send = async (webhookUrl, repository, pusher, commits, color) => 
         .setAuthor({ name: authorEmbed[0], iconURL: authorEmbed[1], url: authorEmbed[2] })
         .setTimestamp()
         .setTitle(`\`📂: ${repository}\``);
-//test
+
     try {
         const client = new discord.WebhookClient({ url: webhookUrl });
         core.info("Sending webhook message...");
@@ -35,8 +35,6 @@ module.exports.send = async (webhookUrl, repository, pusher, commits, color) => 
         throw error;
     }
 };
-
-//test
 
 module.exports.getChangeLog = (commits) => {
     core.info("Constructing Changelog...");
@@ -50,18 +48,25 @@ module.exports.getChangeLog = (commits) => {
 
         const sha = commit.id.slice(0, 6);
 
-        // Split commit.message into title and details
-        const [titleWithNewlines, details] = commit.message.split('\n\n');
+        // Split commit.message into title and description
+        const [titleWithNewlines, descriptionWithNewlines, ...coAuthors] = commit.message.split('\n\n');
 
         // Remove newlines from the title
         const title = titleWithNewlines.replace(/\n/g, '');
 
-        // Use logical nullish assignment to set details to an empty string if it's undefined
-        const sanitizedDetails = details ?? '';
+        // Use logical nullish assignment to set description to an empty string if it's undefined
+        const description = descriptionWithNewlines ?? '';
 
+        // Process co-authors if any
+        let coAuthorsText = '';
+        if (coAuthors.length > 0) {
+            coAuthorsText = `-# ${coAuthors.join('\n')}\n`;
+        }
+
+        // Create the formatted message
         let message = commit.message.length > MAX_MESSAGE_LENGTH
             ? `${commit.message.slice(0, MAX_MESSAGE_LENGTH)}...`
-            : `[\`${sha}\`](${commit.url}) — ${title}\n${sanitizedDetails}\n`;
+            : `[\`${sha}\`](${commit.url}) — ${title}\n${description}\n${coAuthorsText}`;
 
         changelog += message;
     });
