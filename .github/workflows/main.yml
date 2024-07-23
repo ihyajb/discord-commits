@@ -7,7 +7,7 @@ jobs:
     steps:
 
       - name: Send message to discord
-        uses: ihyajb/discord-commits@test
+        uses: ihyajb/discord-commits@uhj
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           hide_links: true
