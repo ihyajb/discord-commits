@@ -70,6 +70,11 @@ module.exports.getChangeLog = (commits) => {
             : `[\`${sha}\`](${commit.url}) — ${title}\n${description}\n${coAuthorsText}`;
 
         changelog += message;
+
+        // Add a blank line if this is not the last commit
+        if (index < commits.length - 1) {
+            changelog += '\n';
+        }
     });
 
     return changelog;
