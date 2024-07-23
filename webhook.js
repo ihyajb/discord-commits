@@ -49,18 +49,14 @@ module.exports.getChangeLog = (commits) => {
         const sha = commit.id.slice(0, 6);
 
         // Split commit.message into title, description, and co-authors
-        const [titleWithNewlines, descriptionWithNewlines, ...coAuthors] = commit.message.split('\n\n');
-
-        // Remove newlines from the title
-        const title = titleWithNewlines.replace(/\n/g, '');
-
-        // Use logical nullish assignment to set description to an empty string if it's undefined
-        const description = descriptionWithNewlines ?? '';
+        const messageParts = commit.message.split('\n\n');
+        const title = messageParts[0].replace(/\n/g, '');
+        const description = messageParts[1] || '';
 
         // Process co-authors if any
         let coAuthorsText = '';
-        if (coAuthors.length > 0) {
-            const coAuthorUsernames = coAuthors.map(coAuthor => {
+        if (messageParts.length > 2) {
+            const coAuthorUsernames = messageParts.slice(2).map(coAuthor => {
                 const match = coAuthor.match(/Co-Authored-By: (.+?) \</);
                 return match ? match[1] : '';
             }).filter(Boolean);
