@@ -61,10 +61,12 @@ module.exports.getChangeLog = (commits) => {
         let coAuthorsText = '';
         if (coAuthors.length > 0) {
             const coAuthorUsernames = coAuthors.map(coAuthor => {
-                const match = coAuthor.match(/Co-Authored-By: (.+?) </);
+                const match = coAuthor.match(/Co-Authored-By: (.+?) \</);
                 return match ? match[1] : '';
             }).filter(Boolean);
-            coAuthorsText = `-# Co-Authors: ${coAuthorUsernames.join(', ')}\n`;
+            if (coAuthorUsernames.length > 0) {
+                coAuthorsText = `-# Co-Authors: ${coAuthorUsernames.join(', ')}\n`;
+            }
         }
 
         // Create the formatted message
