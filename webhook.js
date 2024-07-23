@@ -72,7 +72,7 @@ module.exports.getChangeLog = (commits) => {
             message += `\n${description}`;
         }
         if (coAuthorsText) {
-            message += `\n${coAuthorsText}`;
+            message += `${coAuthorsText}`;
         }
 
         changelog += message;
