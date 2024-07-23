@@ -48,35 +48,32 @@ module.exports.getChangeLog = (commits) => {
 
         const sha = commit.id.slice(0, 6);
 
-        // Find the position of the first "Co-Authored-By:"
-        const coAuthorIndex = commit.message.indexOf('Co-Authored-By:');
-
-        // Remove everything before the first "Co-Authored-By:" if it exists
-        const cleanMessage = coAuthorIndex !== -1
-            ? commit.message.slice(coAuthorIndex).trim()
-            : commit.message;
-
-        // Split the cleaned message into parts
-        const messageParts = cleanMessage.split('\n\n');
+        // Split commit.message into parts
+        const messageParts = commit.message.split('\n\n');
         const title = messageParts[0].replace(/\n/g, '');
-        const description = messageParts.length > 1 ? messageParts.slice(1).join('\n\n') : '';
+        let description = messageParts[1] || '';
 
-        // Process co-authors from the original message
+        // Remove everything after the first "Co-Authored-By:"
+        const coAuthorsIndex = commit.message.indexOf('Co-Authored-By:');
+        if (coAuthorsIndex !== -1) {
+            description = description.split('\n\n')[0];
+        }
+
+        // Process co-authors
+        let coAuthorsText = '';
         const coAuthors = commit.message.split('\n').filter(line => line.startsWith('Co-Authored-By:')).map(line => {
             const match = line.match(/Co-Authored-By: (.+?) <\/?/);
             return match ? match[1] : '';
         }).filter(Boolean);
 
-        let coAuthorsText = coAuthors.length > 0 ? `-# Co-Authored by: ${coAuthors.join(', ')}` : '';
+        if (coAuthors.length > 0) {
+            coAuthorsText = `-# Co-Authors: ${coAuthors.join(', ')}\n`;
+        }
 
         // Create the formatted message
-        let message = `[\`${sha}\`](${commit.url}) — ${title}`;
-        if (description) {
-            message += `\n${description}`;
-        }
-        if (coAuthorsText) {
-            message += `\n${coAuthorsText}`;
-        }
+        let message = commit.message.length > MAX_MESSAGE_LENGTH
+            ? `${commit.message.slice(0, MAX_MESSAGE_LENGTH)}...`
+            : `[\`${sha}\`](${commit.url}) — ${title}\n${description}\n${coAuthorsText}`;
 
         changelog += message;
 
