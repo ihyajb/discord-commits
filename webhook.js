@@ -55,14 +55,15 @@ module.exports.getChangeLog = (commits) => {
 
         // Process co-authors if any
         let coAuthorsText = '';
-        if (messageParts.length > 2) {
-            const coAuthorUsernames = messageParts.slice(2).map(coAuthor => {
-                const match = coAuthor.match(/Co-Authored-By: (.+?) </);
-                return match ? match[1] : '';
-            }).filter(Boolean);
-            if (coAuthorUsernames.length > 0) {
-                coAuthorsText = `-# Co-Authors: ${coAuthorUsernames.join(', ')}\n`;
+        const coAuthors = [];
+        for (let i = 2; i < messageParts.length; i++) {
+            const match = messageParts[i].match(/Co-Authored-By: (.+?) </);
+            if (match) {
+                coAuthors.push(match[1]);
             }
+        }
+        if (coAuthors.length > 0) {
+            coAuthorsText = `-# Co-Authors: ${coAuthors.join(', ')}\n`;
         }
 
         // Create the formatted message
@@ -75,3 +76,4 @@ module.exports.getChangeLog = (commits) => {
 
     return changelog;
 };
+
