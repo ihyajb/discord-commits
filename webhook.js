@@ -13,14 +13,14 @@ module.exports.send = async (webhookUrl, repository, wasForced, pusher, commits,
     const pushType = wasForced == true ? 'force pushed' : 'pushed'
 
     const authorEmbed = [
-        `⚡ ${pusher} ${pushType} ${size} commit${count}`,
+        `⚒️ @${pusher}`,
         `https://avatars.githubusercontent.com/${pusher}`,
         `https://github.com/${pusher}`,
     ];
 
     core.info(color);
     const embed = new discord.EmbedBuilder()
-        .setDescription(this.getChangeLog(commits))
+        .setDescription(`${size} commit${count} ${pushType} to repo`)
         .setColor(color)
         .setAuthor({ name: authorEmbed[0], iconURL: authorEmbed[1], url: authorEmbed[2] })
         .setTimestamp()
