@@ -51,7 +51,7 @@ module.exports.getChangeLog = (commits) => {
 
         // Split commit.message into parts and remove "Co-Authored-By" lines
         let messageParts = commit.message.split('\n\n');
-        const title = messageParts[0].replace(/\n/g, '');
+        let title = messageParts[0].replace(/\n/g, '');
 
         // Extract and remove co-author lines
         let coAuthorsText = '';
