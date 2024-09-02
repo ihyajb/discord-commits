@@ -67,6 +67,11 @@ module.exports.getChangeLog = (commits) => {
         // Determine the description by excluding co-authored lines
         let description = messageParts.slice(1).join('\n\n').split('\n').filter(line => !line.startsWith('Co-Authored-By:')).join('\n');
 
+        if (title.startsWith('?')) {
+            title = "Hidden Commit";
+            description = null
+        }
+
         // Create the formatted message
         let message = `[\`${sha}\`](${commit.url}) — **${title}**`;
         if (description) {
