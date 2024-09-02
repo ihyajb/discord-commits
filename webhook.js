@@ -68,7 +68,7 @@ module.exports.getChangeLog = (commits) => {
         let description = messageParts.slice(1).join('\n\n').split('\n').filter(line => !line.startsWith('Co-Authored-By:')).join('\n');
 
         if (title.startsWith('?')) {
-            title = "Hidden Commit";
+            title = "Commit Marked as Private";
             description = null
         }
 
