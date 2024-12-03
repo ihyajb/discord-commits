@@ -13,7 +13,7 @@ module.exports.send = async (webhookUrl, repository, wasForced, pusher, commits,
     const pushType = wasForced == true ? 'force pushed' : 'pushed'
 
     const authorEmbed = [
-        `⚡ ${pusher} ${pushType} ${size} commit${count}`,
+        `⚡ @${pusher} ${pushType} ${size} commit${count}`,
         `https://avatars.githubusercontent.com/${pusher}`,
         `https://github.com/${pusher}`,
     ];
