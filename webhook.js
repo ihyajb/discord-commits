@@ -2,111 +2,94 @@ const discord = require("discord.js");
 const core = require("@actions/core");
 const MAX_MESSAGE_LENGTH = 256;
 
-module.exports.send = (
-    webhookUrl,
-    payload,
-    hideLinks,
-    censorUsername,
-    color
-) => {
-    const repository = payload.repository.full_name;
-    const commits = payload.commits;
+module.exports.send = async (webhookUrl, repository, wasForced, pusher, commits, color) => {
     const size = commits.length;
-    const branch = payload.ref.split("/")[payload.ref.split("/").length - 1]; 
-    const url = payload.compare;
-    censorUsername = censorUsername.toString();
-
-    if (commits.length === 0) {
-        core.warning(`Aborting analysis, found no commits.`);
-    }
 
     core.info("Constructing Embed...");
 
-    let latest = commits[0];
-    const count = size == 1 ? "Commit" : " Commits";
+    const count = size === 1 ? "" : "s";
+    const pushType = wasForced == true ? 'force pushed' : 'pushed'
 
-      let AuthorEmbed = [
-        `${latest.author.username} | ⚡ ${size} ${count}`,
-        `https://avatars.githubusercontent.com/${latest.author.username}`,
-        `https://github.com/${latest.author.username}`,
-      ]
+    const authorEmbed = [
+        `⚡ @${pusher} ${pushType} ${size} commit${count}`,
+        `https://avatars.githubusercontent.com/${pusher}`,
+        `https://github.com/${pusher}`,
+    ];
 
-      core.info(color);
-    let embed = new discord.EmbedBuilder()
-        .setDescription(this.getChangeLog(payload, hideLinks, censorUsername))
+    core.info(color);
+    const embed = new discord.EmbedBuilder()
+        .setDescription(this.getChangeLog(commits))
         .setColor(color)
-        .setAuthor({name: AuthorEmbed[0], iconURL: AuthorEmbed[1], url: AuthorEmbed[2]})
-        .setTitle(`📁 \`${repository}\`\n🌳 \`${branch}\``)
-    // .setTimestamp(Date.parse(latest.timestamp));
+        .setAuthor({ name: authorEmbed[0], iconURL: authorEmbed[1], url: authorEmbed[2] })
+        .setTimestamp()
+        .setTitle(`\`📂: ${repository}\``);
 
-    if (!hideLinks) {
-        embed.setURL(url);
-    }
-
-    return new Promise((resolve, reject) => {
-        let client;
-        core.info("Preparing Discord webhook client...");
-        core.info(webhookUrl)
-        try {
-            client = new discord.WebhookClient({ url: webhookUrl });
-        } catch (error) {
-            reject(error);
-        }
-
+    try {
+        const client = new discord.WebhookClient({ url: webhookUrl });
         core.info("Sending webhook message...");
+        const result = await client.send({ embeds: [embed] });
+        core.info("Successfully sent the message!");
+        return result;
+    } catch (error) {
+        throw error;
+    }
+};
 
-        return client
-            .send({
-                embeds: [embed],
-            })
-            .then((result) => {
-                core.info("Successfully sent the message!");
-                resolve(result);
-            })
-            .catch((error) => reject(error));
-    });
-}; 
-
-module.exports.getChangeLog = (payload, hideLinks, censorUsername) => {
+module.exports.getChangeLog = (commits) => {
     core.info("Constructing Changelog...");
-    const commits = payload.commits;
     let changelog = "";
 
-    for (let i in commits) {
-        if (i > 4) {
-            changelog += `+ ${commits.length - i} more...\n`;
-            break;
+    commits.forEach((commit, index) => {
+        if (index > 7) {
+            changelog += `+ ${commits.length - index} more...\n`;
+            return;
         }
 
-        let commit = commits[i];
-        const firstUsername = commit.author.username[0];
-        const lastUsername = commit.author.username[commit.author.username.length - 1];
-        if (censorUsername == 'true') {
-            username = `${firstUsername}...${lastUsername}`;
-        }
-        const repository = payload.repository;
+        const sha = commit.id.slice(0, 6);
 
-        if (commit.message.includes(repository.full_name) && hideLinks) {
-            const firstRepository = repository.full_name[0];
-            const lastRepository =
-                repository.full_name[repository.full_name.length - 1];
-            commit.message = commit.message.replaceAll(repository.full_name, `${firstRepository}...${lastRepository}`);
-        }
+        // Split commit.message into parts and remove "Co-Authored-By" lines
+        let messageParts = commit.message.split('\n\n');
+        let title = messageParts[0].replace(/\n/g, '');
 
-        let sha = commit.id.substring(0, 7);
-        let message
-        if (commit.message.length > MAX_MESSAGE_LENGTH) {
-            message = commit.message.substring(0, MAX_MESSAGE_LENGTH) + "..."
-        } else {
-            // message = `\`${sha}\` ${commit.message} by *@${username}*\n`
-            let newMessage = commit.message.replaceAll('\n\n', '\n')
-            message = `\`${sha}\` ${newMessage}\n\n`
+        // Extract and remove co-author lines
+        let coAuthorsText = '';
+        const coAuthors = commit.message.split('\n').filter(line => line.startsWith('Co-Authored-By:')).map(line => {
+            const match = line.match(/Co-Authored-By: (.+?) <\/?/);
+            return match ? match[1] : '';
+        }).filter(Boolean);
+
+        if (coAuthors.length > 0) {
+            coAuthorsText = `-# Co-Authors: ${coAuthors.join(', ')}`;
         }
 
-        // changelog += message.replaceAll('\n\n', '\n > ')
+        // Determine the description by excluding co-authored lines
+        let description = messageParts.slice(1).join('\n\n').split('\n').filter(line => !line.startsWith('Co-Authored-By:')).join('\n');
 
-        changelog += message
-    }
+        if (title.startsWith('?')) {
+            title = "*marked as private*";
+            description = null
+        }
+
+        // Create the formatted message
+        let message = `[\`${sha}\`](${commit.url}) — **${title}**`;
+        if (description) {
+            message += `\n${description}`;
+        }
+        if (coAuthorsText) {
+            if (!description) {
+                message += `\n${coAuthorsText}`;
+            } else {
+                message += `${coAuthorsText}`;
+            }
+        }
+
+        changelog += message;
+
+        // Add a blank line if this is not the last commit
+        if (index < commits.length - 1) {
+            changelog += '\n\n';
+        }
+    });
 
     return changelog;
 };
