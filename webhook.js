@@ -7,8 +7,6 @@ module.exports.send = async (webhookUrl, repository, wasForced, pusher, commits,
 
     core.info("Constructing Embed...");
 
-    // const latest = commits[0];
-
     const count = size === 1 ? "" : "s";
     const pushType = wasForced == true ? 'force pushed' : 'pushed'
 
@@ -95,7 +93,3 @@ module.exports.getChangeLog = (commits) => {
 
     return changelog;
 };
-
-//test3
-//text4
-//test5
