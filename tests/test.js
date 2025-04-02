@@ -8,7 +8,7 @@ const originalCoreModule = { ...core };
 const mockInputs = {
   "webhook_url": "https://discord.com/api/webhooks/1350538058134585405/2ZneTNQZPjYhk_caQ66TcuIL9TxV-bAY5e-dAi1ultTMMBp0vgJc9X1cpf4if_jAS7CH",
   "color": "7dbbe6",
-  "repo_name": ""
+  "repo_name": "",
 };
 
 // Override core.getInput
@@ -30,7 +30,8 @@ async function runTest() {
       webhookPayload.forced,
       webhookPayload.pusher.name,
       webhookPayload.commits,
-      core.getInput("color")
+      core.getInput("color"),
+      core.getInput("thread_id")
     );
     console.log("Test completed successfully!");
   } catch (error) {

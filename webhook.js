@@ -1,8 +1,8 @@
-const discord = require("discord.js");
+const { EmbedBuilder, WebhookClient } = require("discord.js");
 const core = require("@actions/core");
 const MAX_MESSAGE_LENGTH = 256;
 
-module.exports.send = async (webhookUrl, repository, wasForced, pusher, commits, color) => {
+module.exports.send = async (webhookUrl, repository, wasForced, pusher, commits, color, thread_id) => {
     const size = commits.length;
 
     core.info("Constructing Embed...");
@@ -17,7 +17,7 @@ module.exports.send = async (webhookUrl, repository, wasForced, pusher, commits,
     ];
 
     core.info(color);
-    const embed = new discord.EmbedBuilder()
+    const embed = new EmbedBuilder()
         .setDescription(this.getChangeLog(commits))
         .setColor(color)
         .setAuthor({ name: authorEmbed[0], iconURL: authorEmbed[1], url: authorEmbed[2] })
@@ -25,9 +25,14 @@ module.exports.send = async (webhookUrl, repository, wasForced, pusher, commits,
         .setTitle(`\`📂: ${repository}\``);
 
     try {
-        const client = new discord.WebhookClient({ url: webhookUrl });
+        console.log(webhookUrl)
+        const client = new WebhookClient({ url: webhookUrl });
         core.info("Sending webhook message...");
-        const result = await client.send({ embeds: [embed] });
+        const messageOptions = {
+            embeds: [embed],
+            ...(thread_id && { threadId: thread_id })
+        };
+        const result = await client.send(messageOptions);
         core.info("Successfully sent the message!");
         return result;
     } catch (error) {

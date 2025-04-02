@@ -5,6 +5,7 @@ const webhooks = require('./webhook')
 async function main() {
 	let webhookUrl = core.getInput("webhook_url");
 	const color = core.getInput("color");
+	const thread_id = core.getInput("thread_id");
 	const customRepoName = core.getInput("repo_name");
 
 	const payload = github.context.payload
@@ -39,10 +40,10 @@ async function main() {
 		webhookUrl,
 		payload.repository.full_name,
 		payload.forced,
-		// payload.compare,
 		payload.pusher.name,
 		commits,
-		color
+		color,
+		thread_id
 	);
 }
 
