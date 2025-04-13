@@ -21,8 +21,7 @@ module.exports.send = async (webhookUrl, repository, wasForced, pusher, commits,
         .setDescription(this.getChangeLog(commits))
         .setColor(color)
         .setAuthor({ name: authorEmbed[0], iconURL: authorEmbed[1], url: authorEmbed[2] })
-        .setTimestamp()
-        .setTitle(`\`📂: ${repository}\``);
+        .setTimestamp();
 
     try {
         console.log(webhookUrl)
@@ -30,6 +29,7 @@ module.exports.send = async (webhookUrl, repository, wasForced, pusher, commits,
         core.info("Sending webhook message...");
         const messageOptions = {
             embeds: [embed],
+            username: repository,
             ...(thread_id && { threadId: thread_id })
         };
         const result = await client.send(messageOptions);
